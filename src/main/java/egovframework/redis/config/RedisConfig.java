@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -32,6 +33,7 @@ public class RedisConfig extends AbstractHttpSessionApplicationInitializer {
     private static final Logger logger = LoggerFactory.getLogger(RedisController.class);
 
     @Bean
+    @Order(1)
     public RedisConnectionFactory redisConnectionFactory() {
 //        CloudFactory cloudFactory = new CloudFactory();
 //        Cloud cloud = cloudFactory.getCloud();
@@ -40,6 +42,8 @@ public class RedisConfig extends AbstractHttpSessionApplicationInitializer {
 
         if(getInfo() != null) {
             RedisInstanceInfo instanceInfo = getInfo();
+            logger.info("Redis URL : " + instanceInfo.getHost() + ":" + instanceInfo.getPort() + " / pwd : " + instanceInfo.getPassword());
+
             lettuceConnectionFactory.setHostName(instanceInfo.getHost());
             lettuceConnectionFactory.setPort(instanceInfo.getPort());
             lettuceConnectionFactory.setPassword(instanceInfo.getPassword());
@@ -52,6 +56,7 @@ public class RedisConfig extends AbstractHttpSessionApplicationInitializer {
     }
 
     @Bean
+    @Order(2)
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
@@ -61,10 +66,11 @@ public class RedisConfig extends AbstractHttpSessionApplicationInitializer {
     }
 
     @Bean
+    @Order(0)
     public RedisInstanceInfo getInfo() {
         logger.info("Getting Redis Instance Info...");
 
-        String vcap = System.getProperty("VCAP_SERVICES");
+        String vcap = System.getenv("VCAP_SERVICES");
         logger.info("VCAP_SERVICES : " + vcap);
         if(vcap != null) {
             JsonElement root = new JsonParser().parse(vcap);

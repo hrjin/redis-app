@@ -9,12 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
+ * Redis MVC를 위한 Controller
  *
  * @author hrjin
  * @version 1.0
@@ -62,53 +60,8 @@ public class RedisController {
     }
 
 
-//    private RedisInstanceInfo getInfo() {
-//        logger.info("Getting Redis Instance Info...");
-//
-//        String vcap = System.getProperty("VCAP_SERVICES");
-//        logger.info("VCAP_SERVICES : " + vcap);
-//
-//        JsonElement root = new JsonParser().parse(vcap);
-//        JsonObject redis = null;
-//        if (root != null) {
-//            if (root.getAsJsonObject().has("redis")) {
-//                redis = root.getAsJsonObject().get("redis").getAsJsonArray().get(0).getAsJsonObject();
-//                logger.info("service name: " + redis.get("name").getAsString());
-//            }
-//            else if (root.getAsJsonObject().has("p-redis")) {
-//                redis = root.getAsJsonObject().get("p-redis").getAsJsonArray().get(0).getAsJsonObject();
-//                logger.info("service name: " + redis.get("name").getAsString());
-//            }
-//            else {
-//                logger.info("ERROR: no redis instance found in VCAP_SERVICES");
-//            }
-//        }
-//
-//        // then we pull out the credentials block and produce the output
-//        if (redis != null) {
-//            JsonObject creds = redis.get("credentials").getAsJsonObject();
-//            RedisInstanceInfo info = new RedisInstanceInfo();
-//            info.setHost(creds.get("host").getAsString());
-//            info.setPort(creds.get("port").getAsInt());
-//            info.setPassword(creds.get("password").getAsString());
-//
-//            return info;
-//        }
-//        else return new RedisInstanceInfo();
-//    }
-
-//    private RedisClient getLettuceConnection() {
-//        RedisInstanceInfo info = getInfo();
-//
-//        RedisURI redisUri = RedisURI.Builder.redis(info.getHost(), info.getPort())
-//                .withPassword(info.getPassword())
-//                .build();
-//
-//        return RedisClient.create(redisUri);
-//    }
-
-
     @PutMapping("/keys")
+    @ResponseBody
     public String setKey(@RequestParam("kn") String key, @RequestParam("kv") String val) {
         logger.info("Called the key set method, going to set key: " + key + " to val: " + val);
         redisTemplate.opsForValue().set(key, val);
@@ -117,6 +70,7 @@ public class RedisController {
     }
 
     @GetMapping("/keys/{key:.+}")
+    @ResponseBody
     public String getKey(@PathVariable("key") String key) {
         logger.info("Called the key for getting value : " + key);
 
@@ -126,6 +80,5 @@ public class RedisController {
         logger.info("value : " + result);
         return result;
     }
-
 
 }

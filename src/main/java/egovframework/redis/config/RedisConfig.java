@@ -32,17 +32,19 @@ import org.springframework.session.web.context.AbstractHttpSessionApplicationIni
 public class RedisConfig extends AbstractHttpSessionApplicationInitializer {
     private static final Logger logger = LoggerFactory.getLogger(RedisController.class);
 
+
+    /**
+     * Redis 접근을 위한 Connection 객체
+     *
+     * @return the RedisConnectionFactory
+     */
     @Bean
     @Order(1)
     public RedisConnectionFactory redisConnectionFactory() {
-//        CloudFactory cloudFactory = new CloudFactory();
-//        Cloud cloud = cloudFactory.getCloud();
-//        cloud.getServiceInfo("redis");
         LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory("localhost", 6379);
 
         if(getInfo() != null) {
             RedisInstanceInfo instanceInfo = getInfo();
-            logger.info("Redis URL : " + instanceInfo.getHost() + ":" + instanceInfo.getPort() + " / pwd : " + instanceInfo.getPassword());
 
             lettuceConnectionFactory.setHostName(instanceInfo.getHost());
             lettuceConnectionFactory.setPort(instanceInfo.getPort());
@@ -52,9 +54,14 @@ public class RedisConfig extends AbstractHttpSessionApplicationInitializer {
         }
 
         return lettuceConnectionFactory;
-        //return cloud.getSingletonServiceConnector(LettuceConnectionFactory.class, null);
     }
 
+
+    /**
+     * RedisTemplate을 통해 RedisConnection에서 넘겨준 byte 값을 객체 직렬화
+     *
+     * @return the RedisTemplate
+     */
     @Bean
     @Order(2)
     public RedisTemplate<String, Object> redisTemplate() {
@@ -65,6 +72,12 @@ public class RedisConfig extends AbstractHttpSessionApplicationInitializer {
         return redisTemplate;
     }
 
+
+    /**
+     * CF상에서 바인딩된 Redis Service 접속 정보 조회
+     *
+     * @return the RedisInstanceInfo
+     */
     @Bean
     @Order(0)
     public RedisInstanceInfo getInfo() {
@@ -108,6 +121,5 @@ public class RedisConfig extends AbstractHttpSessionApplicationInitializer {
     public TaskScheduler taskScheduler() {
         return new ConcurrentTaskScheduler();
     }
-
 
 }

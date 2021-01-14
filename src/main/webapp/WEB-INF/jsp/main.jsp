@@ -7,7 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Redis Sample App</title>
+    <title>Redis Sample App Main</title>
 </head>
 <body>
 <H1>Welcome Redis Sample App!!</H1>

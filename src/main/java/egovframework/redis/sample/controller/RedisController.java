@@ -70,7 +70,7 @@ public class RedisController {
     public ModelAndView getValuePage(HttpServletRequest request, HttpServletResponse response, @PathVariable("key") String key) {
         ModelAndView mv = new ModelAndView();
         String value = getValue(request, response, key);
-
+        mv.addObject("key", key);
         mv.addObject("value", value);
         mv.setViewName("/view");
         return mv;

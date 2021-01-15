@@ -46,8 +46,13 @@ public class RedisService {
      * @return the String
      */
     public String getValue(String key) {
-        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-        String result = (String) vop.get(key);
+        boolean isExist = redisTemplate.hasKey(key);
+        String result = "no data.";
+
+        if(isExist) {
+            ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+            result = (String) vop.get(key);
+        }
 
         return result;
     }

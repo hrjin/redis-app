@@ -1,4 +1,4 @@
-# eGovFramewokr 기반의 Redis CF Java Sample App 
+# eGovFramework 기반의 Redis CF Java Sample App 
 
 ## 1. Framework
 - eGovFramework 3.9.0

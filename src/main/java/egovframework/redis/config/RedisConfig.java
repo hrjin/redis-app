@@ -3,7 +3,6 @@ package egovframework.redis.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import egovframework.redis.sample.controller.RedisController;
 import egovframework.redis.sample.model.RedisInstanceInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,7 @@ import org.springframework.session.web.context.AbstractHttpSessionApplicationIni
 @Configuration
 @EnableRedisHttpSession
 public class RedisConfig extends AbstractHttpSessionApplicationInitializer {
-    private static final Logger logger = LoggerFactory.getLogger(RedisController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
 
     /**

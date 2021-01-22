@@ -94,9 +94,11 @@ public class RedisController {
         String cookieKey = CommonUtils.getCookie(request, "SESSION");
         String value = "";
 
-        if(cookieKey != null) {
+        if(cookieKey != null && cookieKey.equals(key)) {
             value = redisService.getValue(key);
             return "value = " + value + " & session id = " + sessionValue;
+        } else if(cookieKey != null && !cookieKey.equals(key)) {
+            CommonUtils.removeCookies(response, cookieKey);
         }
 
         value = redisService.getValue(key);

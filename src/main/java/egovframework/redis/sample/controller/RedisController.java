@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Redis 데이터 조회 및 저장을 위한 Controller 클래스
@@ -67,9 +68,9 @@ public class RedisController {
      * @return the ModelAndView
      */
     @GetMapping("/{key:.+}")
-    public ModelAndView getValuePage(HttpServletRequest request, HttpServletResponse response, @PathVariable("key") String key) {
+    public ModelAndView getValuePage(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("key") String key) {
         ModelAndView mv = new ModelAndView();
-        String value = getValue(request, response, key);
+        String value = getValue(request, response, session, key);
         mv.addObject("key", key);
         mv.addObject("value", value);
         mv.setViewName("/view");
@@ -88,21 +89,22 @@ public class RedisController {
      */
     @GetMapping("/keys/{key:.+}")
     @ResponseBody
-    public String getValue(HttpServletRequest request, HttpServletResponse response, @PathVariable("key") String key) {
-        String cookieKey = CommonUtils.getCookie(request, MY_KEY);
+    public String getValue(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("key") String key) {
+        String sessionValue = session.getId();
+        String cookieKey = CommonUtils.getCookie(request, "SESSION");
+        String value = "";
 
-        if(cookieKey != null && cookieKey.equals(key)) {
-            String valueFromCookie = redisService.getValue(cookieKey);
-            return valueFromCookie;
-
-        } else if(cookieKey != null && !cookieKey.equals(key)) {
-            CommonUtils.removeCookies(response, cookieKey);
+        if(cookieKey != null) {
+            value = redisService.getValue(key);
+            return "value = " + value + " & session id = " + sessionValue;
         }
 
-        String value = redisService.getValue(key);
-        CommonUtils.addCookies(response, MY_KEY, key);
+        value = redisService.getValue(key);
+        session.setAttribute("value", value);
 
-        return value;
+        logger.info(session.getAttribute("value").toString());
+        CommonUtils.addCookies(response, "SESSION", sessionValue);
+        return "value = " + value + " & session id = " + sessionValue;
 
     }
 

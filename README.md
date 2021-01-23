@@ -1,4 +1,4 @@
-# eGovFramework 기반의 Redis CF Java Sample App For Session Clustering
+# Redis CF Java Sample App For Session Clustering
 
 ## 1. Framework
 - eGovFramework 3.9.0

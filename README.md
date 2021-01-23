@@ -53,5 +53,5 @@
  >> Param1 : kn(key 이름)
 
 - GET /getSession
-> 현재 요청이 온 브라우저의 SESSION ID와 Cookie에 저장돼있는 SESSION ID를 비교하여 데이터 조회.<br>
+> 현재 요청이 온 브라우저의 SESSION ID와 Cookie에 저장돼있는 SESSION ID를 비교하여 데이터 조회 페이지로 이동.<br>
 > SESSION ID가 일치할 경우 SESSION에서 데이터 값 정상 조회, 불일치일 경우 데이터 조회 실패.

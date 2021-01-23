@@ -16,7 +16,7 @@
         function goValue() {
             var keyName = document.getElementById("keyName").value;
             console.log(keyName);
-            procMovePage("/" + keyName);
+            procMovePage("/setSession/" + keyName);
 
         }
 

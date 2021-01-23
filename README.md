@@ -1,4 +1,4 @@
-# eGovFramework 기반의 Redis CF Java Sample App 
+# eGovFramework 기반의 Redis CF Java Sample App For Session Clustering
 
 ## 1. Framework
 - eGovFramework 3.9.0
@@ -7,7 +7,7 @@
 
 
 ## 2. 특징
-1) Spring에서 Redis를 사용하기위한 라이브러리
+1) Spring에서 Redis Session을 사용하기위한 라이브러리
 - lettuce
 - jedis
 
@@ -25,20 +25,33 @@
 > 본 어플리케이션에서는 String 타입의 데이터로만 테스트하였다.(opsForValue)
 
 
+## 3. 목적
+- 어플리케이션을 Scale-Out하여 세션 클러스터링이 이루어지는 지 확인
 
-## 사용법(API Endpoint)
-- GET /
-> main 페이지로 이동
+
+## 4. Build
+- Build : mvn clean install
+- War File :  /target/redis-app.war
+
+
+## 5. 사용법(API Endpoint)
+
+### cURL
 
 - POST /keys?kn={kn:.+}&kv={kv:.+}
 > Key, Value를 저장.
  >> Param1 : kn(key 이름)  
  >> Param2 : kv(key value)
 
-- GET /{key:.+}
-> value 값을 조회하는 페이지로 이동
+
+### Browser Access
+- GET /
+> main 페이지로 이동
+
+- GET /setSession/{key:.+}
+> Cookie에 Session ID 저장 및 Session에 value 값을 저장 후 관련 데이터 출력 페이지로 이동
  >> Param1 : kn(key 이름)
 
-- GET /keys/{key:.+}
-> value 값을 조회
- >> Param1 : kn(key 이름)  
+- GET /getSession
+> 현재 요청이 온 브라우저의 SESSION ID와 Cookie에 저장돼있는 SESSION ID를 비교하여 데이터 조회.<br>
+> SESSION ID가 일치할 경우 SESSION에서 데이터 값 정상 조회, 불일치일 경우 데이터 조회 실패.
